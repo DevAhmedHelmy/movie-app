@@ -3,20 +3,16 @@
 @section('content')
     <div class="border-b border-gray-800 movie-info">
         <div class="container flex flex-col px-4 py-16 mx-auto md:flex-row">
-            <img src="{{ 'https://image.tmdb.org/t/p/w500/'.$movie['poster_path'] }}" class="w-64 transition duration-150 ease-in-out hover:opacity-75 md:w-96" alt="">
+            <img src="{{ $movie['poster_path'] }}" class="w-64 transition duration-150 ease-in-out hover:opacity-75 md:w-96" alt="">
             <div class="md:ml-24">
                 <h2 class="text-4xl font-semibold">{{ $movie['title'] }}</h2>
                 <div class="flex flex-wrap items-center text-sm text-gray-400">
-                    <span>star </span>
-                    <span class="ml-1">{{ $movie['vote_average'] * 10 .'%' }}</span>
+                    <svg class="fill-current text-orange-500 w-4" viewBox="0 0 24 24"><g data-name="Layer 2"><path d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z" data-name="star"/></g></svg>
+                    <span class="ml-1">{{ $movie['vote_average']}}</span>
                     <span class="mx-2">| </span>
-                    <span>{{ \Carbon\Carbon::parse($movie['release_date'])->format('M d, Y') }}</span>
+                    <span>{{ $movie['release_date']}}</span>
                     <span class="mx-2">| </span>
-                    <span>
-                        @foreach($movieGenres as $value)
-                            {{ $value }}@if(!$loop->last), @endif
-                        @endforeach
-                    </span>
+                    <span> {{ $movie['genres']}} </span>
                 </div>
                 <p class="mt-8 text-gray-300">
                     {{ $movie['overview'] }}
@@ -24,15 +20,13 @@
                 <div class="mt-12">
                     <h4 class="font-semibold text-white">Featured Cast</h4>
                     <div class="flex mt-4">
-                        @foreach($movie['credits']['crew'] as $crew)
-                            @if($loop->index < 2)
-                                <div class="mr-8">
-                                    <div>{{ $crew['name'] }}</div>
-                                    <div class="text-sm text-gray-400">{{ $crew['job'] }}</div>
-                                </div>
-                            @else
-                                @break
-                            @endif
+                        @foreach($movie['crew'] as $crew)
+                             
+                            <div class="mr-8">
+                                <div>{{ $crew['name'] }}</div>
+                                <div class="text-sm text-gray-400">{{ $crew['job'] }}</div>
+                            </div>
+                             
                         @endforeach
 
 
@@ -78,8 +72,8 @@
         <div class="container px-4 py-16 mx-auto">
             <h2 class="px-4 py-16 mx-auto text-4xl">casts</h2>
             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-                @foreach($movie['credits']['cast'] as $cast)
-                    @if($loop->index < 10)
+                @foreach($movie['cast'] as $cast)
+              
                     <div class="mt-8">
                         <a href="#">
                             <img src="{{ 'https://image.tmdb.org/t/p/w300/'.$cast['profile_path'] }}" class="transition duration-150 ease-in-out hover:opacity-75" alt="">
@@ -92,9 +86,7 @@
 
                         </div>
                     </div>
-                    @else
-                        @break
-                    @endif
+                    
                 @endforeach
             </div>
         </div>
@@ -104,8 +96,8 @@
         <div class="container mx-auto px-4 py-16">
             <h2 class="text-4xl font-semibold">Images</h2>
             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-                @foreach ($movie['images']['backdrops'] as $image)
-                @if($loop->index < 10)
+                @foreach ($movie['images'] as $image)
+               
                     <div class="mt-8">
                         <a
                             @click.prevent="
@@ -117,9 +109,7 @@
                             <img src="{{ 'https://image.tmdb.org/t/p/w500/'.$image['file_path'] }}" alt="image1" class="hover:opacity-75 transition ease-in-out duration-150">
                         </a>
                     </div>
-                    @else
-                        @break
-                    @endif
+                    
                 @endforeach
             </div>
 
