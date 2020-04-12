@@ -27,13 +27,13 @@
                         </a>
                     </li>
                     <li class="md:ml-16 md:ml-4 md:mt-0">
-                        <a href="#" class=" hover:text-gray-300">Movies</a>
+                        <a href="{{ route('movies.index') }}" class=" hover:text-gray-300">Movies</a>
                     </li>
                     <li class="md:ml-16 md:ml-4 md:mt-0">
                         <a href="#" class=" hover:text-gray-300">Tv Show</a>
                     </li>
                     <li class="md:ml-16 md:ml-4 md:mt-0">
-                        <a href="#" class=" hover:text-gray-300">Actors</a>
+                        <a href="{{ route('actors.index') }}" class=" hover:text-gray-300">Actors</a>
                     </li>
                 </ul>
                 <div class="flex flex-col items-center md:flex-row">
