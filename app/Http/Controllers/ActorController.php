@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\ViewModels\ActorViewModel;
 use App\ViewModels\ActorsViewModel;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\Cache;
 class ActorController extends Controller
 {
     /**
@@ -13,35 +14,24 @@ class ActorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+    public function index($page = 1)
     {
-        $popularActors = Http::withToken(config('services.tmdb.token'))
-        ->get('https://api.themoviedb.org/3/person/popular')->json()['results'];
-        $viewModel = new ActorsViewModel($popularActors);
+        abort_if($page > 500, 204);
+
+        $popularActors = Cache::remember('popularActors-'.$page, 1, function() use ($page)
+        {
+
+            return Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/person/popular?page='.$page)->json()['results'];
+        });
+
+
+        $viewModel = new ActorsViewModel($popularActors, $page);
 
         return view('actors.index',$viewModel);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -51,40 +41,29 @@ class ActorController extends Controller
      */
     public function show($id)
     {
-        //
+
+        $this->id = $id;
+        $actor = Cache::remember('actor', 60, function ()
+        {
+            return Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/person/'.$this->id)->json();
+        });
+
+        $socail = Cache::remember('socail', 60, function ()
+        {
+            return Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/person/'.$this->id .'/external_ids')->json();
+        });
+
+        $credits = Cache::remember('credits', 60, function ()
+        {
+            return Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/person/'.$this->id .'/combined_credits')->json();
+        });
+
+        $viewModel = new ActorViewModel($actor, $socail, $credits);
+        return view('actors.show',$viewModel);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

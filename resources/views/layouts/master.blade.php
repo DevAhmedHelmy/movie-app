@@ -30,7 +30,7 @@
                         <a href="{{ route('movies.index') }}" class=" hover:text-gray-300">Movies</a>
                     </li>
                     <li class="md:ml-16 md:ml-4 md:mt-0">
-                        <a href="#" class=" hover:text-gray-300">Tv Show</a>
+                        <a href="{{ route('tv.index') }}" class=" hover:text-gray-300">Tv Show</a>
                     </li>
                     <li class="md:ml-16 md:ml-4 md:mt-0">
                         <a href="{{ route('actors.index') }}" class=" hover:text-gray-300">Actors</a>
@@ -60,5 +60,6 @@
 
         <script src="{{ mix('js/app.js') }}"></script>
         @livewireScripts
+        @yield('scripts')
     </body>
 </html>
